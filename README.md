@@ -20,7 +20,7 @@ A simple Instagram Reels-style UI built using **React Native + Expo**, with supp
 - **React Native + Expo**
 - [`expo-av`](https://docs.expo.dev/versions/latest/sdk/av/) for video playback
 - `FlatList` for both horizontal and vertical scrolling
-- `React.useRef`, `useImperativeHandle` for video control
+- React hooks like `useRef` for controlling video playback
 
 ---
 
@@ -30,3 +30,6 @@ A simple Instagram Reels-style UI built using **React Native + Expo**, with supp
 
    ```bash
    git clone https://github.com/BharathNethala/ReelsClone.git
+   cd ReelsClone
+   npm install
+   npx expo start
