@@ -33,3 +33,22 @@ A simple Instagram Reels-style UI built using **React Native + Expo**, with supp
    cd ReelsClone
    npm install
    npx expo start
+---
+
+## Challenges Faced
+
+- Handling smooth video play/pause on scrolling for performance
+- Ensuring only the visible reel plays
+- Managing like button state per reel
+
+---
+
+## 🎥 Demo
+
+Watch the app demo here: https://drive.google.com/file/d/1R3dN8qh57XnlPBJxavKndZg94pxnkMPv/view?usp=sharing
+
+
+---
+
+Thank you for checking out my ReelsClone app!
+
