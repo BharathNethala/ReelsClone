@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Video } from 'expo-av';
+import { Ionicons } from '@expo/vector-icons'; // Importing icon set
 
 const { width } = Dimensions.get('window');
 
@@ -45,6 +46,11 @@ export default function HomeScreen({ navigation }) {
               resizeMode="cover"
             />
             <View style={styles.overlay} />
+
+            {/* Like Button Overlay */}
+            <View style={styles.likeIconWrapper}>
+              <Ionicons name="heart-outline" size={24} color="#fff" />
+            </View>
           </TouchableOpacity>
         )}
       />
@@ -74,6 +80,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 12,
     overflow: 'hidden',
+    position: 'relative',
   },
   thumbnail: {
     width: '100%',
@@ -82,5 +89,13 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.1)',
+  },
+  likeIconWrapper: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    padding: 6,
+    borderRadius: 20,
   },
 });

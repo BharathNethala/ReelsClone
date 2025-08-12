@@ -3,7 +3,6 @@ import React, {
   forwardRef,
   useRef,
   useState,
-  useCallback,
 } from 'react';
 import {
   View,
@@ -23,8 +22,9 @@ const ReelItem = forwardRef(({ video, user }, ref) => {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [liked, setLiked] = useState(false); // Like state
 
-  // Expose play/pause methods to parent via ref
+  // Expose play/pause methods to parent component
   useImperativeHandle(ref, () => ({
     play: async () => {
       if (videoRef.current) {
@@ -40,8 +40,7 @@ const ReelItem = forwardRef(({ video, user }, ref) => {
     },
   }));
 
-  // Memoized toggle function
-  const togglePlayback = useCallback(async () => {
+  const togglePlayback = async () => {
     if (!videoRef.current) return;
     if (isPlaying) {
       await videoRef.current.pauseAsync();
@@ -50,7 +49,11 @@ const ReelItem = forwardRef(({ video, user }, ref) => {
       await videoRef.current.playAsync();
       setIsPlaying(true);
     }
-  }, [isPlaying]);
+  };
+
+  const toggleLike = () => {
+    setLiked((prev) => !prev);
+  };
 
   return (
     <View style={styles.container}>
@@ -61,17 +64,14 @@ const ReelItem = forwardRef(({ video, user }, ref) => {
             source={video}
             style={styles.video}
             resizeMode="cover"
-            shouldPlay={isPlaying}
+            shouldPlay
             isLooping
             volume={1.0}
             onLoadStart={() => setIsBuffering(true)}
             onReadyForDisplay={() => setIsBuffering(false)}
-            onBuffer={({ isBuffering: buffering }) =>
-              setIsBuffering((prev) => (prev !== buffering ? buffering : prev))
-            }
+            onBuffer={({ isBuffering }) => setIsBuffering(isBuffering)}
           />
 
-          {/* Loader while buffering */}
           {isBuffering && (
             <ActivityIndicator
               size="large"
@@ -80,7 +80,7 @@ const ReelItem = forwardRef(({ video, user }, ref) => {
             />
           )}
 
-          {/* Center play/pause button */}
+          {/* Center play/pause icon */}
           <TouchableOpacity
             onPress={togglePlayback}
             activeOpacity={0.7}
@@ -95,17 +95,27 @@ const ReelItem = forwardRef(({ video, user }, ref) => {
         </View>
       </TouchableWithoutFeedback>
 
-      {/* Bottom user info */}
+      {/* Bottom overlay UI */}
       <View style={styles.overlay}>
         <Text style={styles.username}>@{user}</Text>
-        <Ionicons name="heart-outline" size={30} color="white" />
+
+        {/* Like button + count */}
+        <View style={{ alignItems: 'center' }}>
+          <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
+            <Ionicons
+              name={liked ? 'heart' : 'heart-outline'}
+              size={30}
+              color={liked ? 'red' : 'white'}
+            />
+          </TouchableOpacity>
+          <Text style={{ color: 'white', fontSize: 12 }}>
+            {liked ? '1' : '0'} likes
+          </Text>
+        </View>
       </View>
     </View>
   );
 });
-
-// ✅ Memoize to prevent unnecessary re-renders
-export default React.memo(ReelItem);
 
 const styles = StyleSheet.create({
   container: {
@@ -141,10 +151,17 @@ const styles = StyleSheet.create({
     left: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: width - 40,
   },
   username: {
     color: 'white',
     fontSize: 16,
-    marginRight: 10,
+    fontWeight: '600',
+  },
+  likeButton: {
+    padding: 10,
   },
 });
+
+export default ReelItem;
