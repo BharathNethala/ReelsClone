@@ -11,11 +11,6 @@ import { Video } from 'expo-av';
 
 const { width } = Dimensions.get('window');
 
-const NUM_COLUMNS = 2;
-const SPACING = 10;
-const THUMBNAIL_WIDTH = (width - SPACING * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
-const THUMBNAIL_HEIGHT = THUMBNAIL_WIDTH * 1.6; // 9:16 aspect ratio
-
 const THUMBNAILS = [
   { id: '1', video: require('../assets/reel1.mp4') },
   { id: '2', video: require('../assets/reel2.mp4') },
@@ -26,11 +21,13 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Explore Reels</Text>
+
       <FlatList
         data={THUMBNAILS}
         keyExtractor={(item) => item.id}
-        numColumns={NUM_COLUMNS}
-        contentContainerStyle={styles.grid}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalList}
         renderItem={({ item, index }) => (
           <TouchableOpacity
             onPress={() =>
@@ -68,20 +65,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  grid: {
-    paddingHorizontal: SPACING,
+  horizontalList: {
+    paddingHorizontal: 10,
   },
   thumbnailWrapper: {
-    width: THUMBNAIL_WIDTH,
-    height: THUMBNAIL_HEIGHT,
-    margin: SPACING / 2,
-    borderRadius: 16,
+    width: 120,
+    height: 210,
+    marginRight: 10,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   thumbnail: {
     width: '100%',
     height: '100%',
-    borderRadius: 16,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
